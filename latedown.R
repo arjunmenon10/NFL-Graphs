@@ -1,4 +1,8 @@
-pbp <- load_pbp(2011:2022)
+library(nflreadr)
+library(tidyverse)
+library(nflfastR)
+
+pbp <- nflreadr::load_pbp(2011:2022)
 
 latedown <- pbp |> 
   filter(down %in% c(3, 4) & ydstogo >= 7, pass == 1) |> 
@@ -10,8 +14,7 @@ latedown <- pbp |>
            scrambles = sum(qb_scramble, na.rm = T),
            team_abbr = last(posteam)) |> 
   filter(passes > 300, scrambles >= 10) |> 
-  left_join(teams_colors_logos, by = 'team_abbr') |> 
-  filter(passer_name != 'B.Gabbert') 
+  left_join(teams_colors_logos, by = 'team_abbr')
 
 latedown |> 
   ggplot(aes(x = EPAthr, y = EPAsc))+
